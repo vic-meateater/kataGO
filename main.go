@@ -58,7 +58,7 @@ func performCalculate(input string) string {
 	tokens := strings.Split(input, " ")
 
 	if len(tokens) != 3 {
-		return "Не верный формат ввода"
+		return "Вывод ошибки, так как формат математической операции не удовлетворяет заданию — два операнда и один оператор (+, -, /, *)."
 	}
 
 	leftNumber := strings.ToUpper(tokens[0])
@@ -80,8 +80,8 @@ func performCalculate(input string) string {
 
 	isArabicNums := err1 == nil || err2 == nil
 
-	if !isRomanNumbs && !isArabicNums {
-		return "Диапазон не соблюдён"
+	if !isRomanNumbs && isArabicNums {
+		return "Вывод ошибки, так как используются одновременно разные системы счисления."
 	}
 
 	if !isArabicNums {
