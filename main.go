@@ -58,7 +58,8 @@ func performCalculate(input string) string {
 	tokens := strings.Split(input, " ")
 
 	if len(tokens) != 3 {
-		return "Вывод ошибки, так как формат математической операции не удовлетворяет заданию — два операнда и один оператор (+, -, /, *)."
+		printError("Вывод ошибки, так как формат математической операции не удовлетворяет заданию — два операнда и один оператор (+, -, /, *).")
+		return ""
 	}
 
 	leftNumber := strings.ToUpper(tokens[0])
@@ -78,18 +79,17 @@ func performCalculate(input string) string {
 	leftNumberInt, err1 := strconv.Atoi(leftNumber)
 	rightNumberInt, err2 := strconv.Atoi(rightNumber)
 
-	isArabicNums := err1 == nil || err2 == nil
+	hasArabicNumbs := err1 == nil || err2 == nil
+	hasRomanNumbs := isRomanNumber(leftNumber) || isRomanNumber(rightNumber)
 
-	if !isRomanNumbs && isArabicNums {
-		return "Вывод ошибки, так как используются одновременно разные системы счисления."
-	}
-
-	if !isArabicNums {
-		return "Калькулятор умеет работать только с арабскими или римскими цифрами одновременно"
+	if hasRomanNumbs && hasArabicNumbs {
+		printError("Калькулятор умеет работать только с арабскими или римскими цифрами одновременно")
+		return ""
 	}
 
 	if !inValidRange(leftNumberInt, 1, 10) || !inValidRange(rightNumberInt, 1, 10) {
-		return "Калькулятор должен принимать на вход числа от 1 до 10 включительно"
+		printError("Калькулятор должен принимать на вход числа от 1 до 10 включительно")
+		return ""
 	}
 
 	result := calculate(leftNumberInt, rightNumberInt, operator)
@@ -112,13 +112,13 @@ func calculate(leftNum, rightNum int, operator string) int {
 		return leftNum * rightNum
 	case "/":
 		if rightNum == 0 {
-			fmt.Println("Деление на 0")
+			printError("Деление на 0")
 			return 0
 		}
 		return leftNum / rightNum
 
 	default:
-		fmt.Println("Пока что неподдерживаемый оператор")
+		printError("Пока что неподдерживаемый оператор")
 		return 0
 	}
 }
@@ -149,4 +149,9 @@ func arabicToRoman(number int) string {
 func inValidRange(number int, start int, end int) bool {
 	result := number >= start && number <= end
 	return result
+}
+
+func printError(e string) {
+	err := fmt.Errorf(e)
+	fmt.Println(err.Error())
 }
